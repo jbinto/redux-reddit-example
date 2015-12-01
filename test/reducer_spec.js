@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { rootReducer, selectedReddit, posts } from '../src/reducers';
-import { selectReddit, invalidateReddit } from '../src/actions';
+import { selectReddit, invalidateReddit, requestPosts } from '../src/actions';
 
 const NOOP = { type: 'NOOP' };
 
@@ -28,6 +28,7 @@ describe('selectedReddit reducer', () => {
 //   didInvalidate: false,
 //   items: []
 // },
+
 describe('posts reducer', () => {
   it('sets a reasonable default', () => {
     const nextState = posts(undefined, NOOP);
@@ -38,14 +39,29 @@ describe('posts reducer', () => {
     });
   });
 
-  it('sets didInvalidate on INVALIDATE_REDDIT', () => {
+  it('on INVALIDATE_REDDIT, sets didInvalidate', () => {
     const state = posts(undefined, NOOP);
-
     const action = invalidateReddit(state);
     const nextState = posts(state, action);
-
     expect(nextState.didInvalidate).to.be.true;
-  })
+  });
+
+  it('on REQUEST_POSTS, sets isFetching', () => {
+    const state = posts(undefined, NOOP);
+    const action = requestPosts(state);
+    const nextState = posts(state, action);
+    expect(nextState.isFetching).to.be.true;
+  });
+
+  it('on REQUEST_POSTS, unsets didInvalidate', () => {
+    const state = posts(undefined, NOOP);
+    state.didInvalidate = true;
+
+    const action = requestPosts(state);
+    const nextState = posts(state, action);
+    expect(nextState.didInvalidate).to.be.false;
+  });
+
 });
 
 describe('rootReducer', () => {

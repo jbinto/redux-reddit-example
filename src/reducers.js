@@ -21,6 +21,11 @@ export const posts = (state = {
       return Object.assign({}, state, {
         didInvalidate: true
       });
+    case 'REQUEST_POSTS':
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false      // not sure why?
+      });
     default:
       return state;
   }
