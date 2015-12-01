@@ -9,33 +9,36 @@ export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 
-export function selectReddit(reddit) {
+
+// XXX here `reddit` is just a string...
+export function selectReddit(redditName) {
   return {
     type: SELECT_REDDIT,
-    reddit,
+    reddit: redditName,
   }
 }
 
-export function invalidateReddit(reddit) {
+// XXX here `reddit` is a complex object of posts :(
+export function invalidateReddit(state) {
   return {
     type: INVALIDATE_REDDIT,
-    reddit,
+    state,
   }
 }
 
-export function requestPosts(reddit) {
+export function requestPosts(state) {
   return {
     type: REQUEST_POSTS,
-    reddit,
+    state,
   }
 }
 
 // Here is our "async action". (Not exactly.)
 // This is like a callback, when network response is received.
-export function receivePosts(reddit, json) {
+export function receivePosts(state, json) {
   return {
     type: RECEIVE_POSTS,
-    reddit,  // reddit: reddit
+    state,  // reddit: reddit
     posts: null,  // XXX
     receivedAt: Date.now(),
   }

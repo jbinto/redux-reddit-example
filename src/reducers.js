@@ -1,10 +1,26 @@
 import { combineReducers } from 'redux';
-import * as actions from '../src/actions'
+import { SELECT_REDDIT } from '../src/actions'
 
 export const selectedReddit = (state='javascript', action) => {
-  switch (action) {
-    case actions.SELECT_REDDIT:
-      return reddit;
+  // XXX switch action.type???
+  switch (action.type) {
+    case SELECT_REDDIT:
+      return action.reddit;
+    default:
+      return state;
+  }
+}
+
+export const posts = (state = {
+  isFetching: false,
+  didInvalidate: false,
+  items: []
+}, action) => {
+  switch (action.type) {
+    case 'INVALIDATE_REDDIT':
+      return Object.assign({}, state, {
+        didInvalidate: true
+      });
     default:
       return state;
   }
