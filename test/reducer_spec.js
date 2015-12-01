@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { rootReducer, selectedReddit, posts } from '../src/reducers';
-import { selectReddit, invalidateReddit, requestPosts } from '../src/actions';
+import { selectReddit, invalidateReddit, requestPosts, receivePosts } from '../src/actions';
 
 const NOOP = { type: 'NOOP' };
 
@@ -30,8 +30,12 @@ describe('selectedReddit reducer', () => {
 // },
 
 describe('posts reducer', () => {
+  const defaultState = () => {
+    return posts(undefined, NOOP);
+  }
+
   it('sets a reasonable default', () => {
-    const nextState = posts(undefined, NOOP);
+    const nextState = defaultState();
     expect(nextState).to.deep.equal({
       isFetching: false,
       didInvalidate: false,
@@ -40,21 +44,21 @@ describe('posts reducer', () => {
   });
 
   it('on INVALIDATE_REDDIT, sets didInvalidate', () => {
-    const state = posts(undefined, NOOP);
+    const state = defaultState();
     const action = invalidateReddit(state);
     const nextState = posts(state, action);
     expect(nextState.didInvalidate).to.be.true;
   });
 
   it('on REQUEST_POSTS, sets isFetching', () => {
-    const state = posts(undefined, NOOP);
+    const state = defaultState();
     const action = requestPosts(state);
     const nextState = posts(state, action);
     expect(nextState.isFetching).to.be.true;
   });
 
   it('on REQUEST_POSTS, unsets didInvalidate', () => {
-    const state = posts(undefined, NOOP);
+    const state = defaultState();
     state.didInvalidate = true;
 
     const action = requestPosts(state);
@@ -62,12 +66,41 @@ describe('posts reducer', () => {
     expect(nextState.didInvalidate).to.be.false;
   });
 
+  it('on RECEIVE_POSTS, unsets isFetching/didInvalidate', () => {
+    const state = defaultState();
+    state.didInvalidate = true;
+    state.isFetching = true;
+
+    const action = receivePosts(state);
+    const nextState = posts(state, action);
+    expect(nextState.isFetching).to.be.false;
+    expect(nextState.didInvalidate).to.be.false;
+  });
+
+  it('on RECEIVE_POSTS, sets state.lastUpdated to action.receivedAt', () => {
+    const state = defaultState();
+    const action = receivePosts(state);
+
+    const nextState = posts(state, action);
+
+    expect(nextState.updatedAt).to.equal(action.receivedAt);
+  });
+
+  it('on RECEIVE_POSTS, sets state.items to action.posts', () => {
+    const state = defaultState();
+    const action = receivePosts(state);
+
+    const nextState = posts(state, action);
+
+    expect(nextState.items).to.equal(action.posts);
+  });
+
 });
 
 describe('rootReducer', () => {
+  const defaultState = () => rootReducer(undefined, NOOP);
+
   it('exists', () => {
-    expect(
-      rootReducer(undefined, NOOP)
-    ).to.be.ok;  // `ok` means truthy
+    expect(defaultState()).to.be.ok;  // `ok` means truthy
   });
 });

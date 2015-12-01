@@ -24,7 +24,16 @@ export const posts = (state = {
     case 'REQUEST_POSTS':
       return Object.assign({}, state, {
         isFetching: true,
-        didInvalidate: false      // not sure why?
+        // why even track invalidation?
+        // Guess: enable/disable refresh button?
+        didInvalidate: false
+      });
+    case 'RECEIVE_POSTS':
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        updatedAt: action.receivedAt,
+        items: action.posts
       });
     default:
       return state;
