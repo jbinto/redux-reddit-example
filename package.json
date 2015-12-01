@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "description": "Example of Redux/React app hitting Reddit API.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "babel": {
+      "presets": [
+        "es2015",
+        "react"
+      ]
+    },
+    "scripts": {
+      "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js 'test/**/*.@(js|jsx)'",
+      "test:watch": "npm run test -- --watch --watch-extensions jsx",
+      "test:watch:debug": "npm run test:watch -- --debug-brk"
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jbinto/redux-reddit-example.git"
