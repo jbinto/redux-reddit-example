@@ -1,7 +1,7 @@
 /* globals describe,it */
 
 import { expect } from 'chai';
-import { rootReducer, selectedReddit, posts } from '../src/reducers';
+import { rootReducer, selectedReddit, posts, postsByReddit } from '../src/reducers';
 import { selectReddit, invalidateReddit, requestPosts, receivePosts } from '../src/actions';
 
 const NOOP = { type: 'NOOP' };
@@ -80,7 +80,7 @@ describe('posts reducer', () => {
 
     const nextState = posts(state, action);
 
-    expect(nextState.updatedAt).to.equal(action.receivedAt);
+    expect(nextState.lastUpdated).to.equal(action.receivedAt);
   });
 
   it('on RECEIVE_POSTS, sets state.items to action.posts', () => {
@@ -90,6 +90,26 @@ describe('posts reducer', () => {
     const nextState = posts(state, action);
 
     expect(nextState.items).to.equal(action.posts);
+  });
+});
+
+describe('postsByReddit reducer', () => {
+  const defaultState = () => postsByReddit(undefined, NOOP);
+
+  it('exists', () => {
+    expect(defaultState()).to.be.ok();  // `ok` means truthy
+  });
+
+  it('returns structured list of reddits by delegating to post reducer', () => {
+    const state = defaultState();
+
+    const r = 'toronto';
+    const actions = [invalidateReddit(r), requestPosts(r), receivePosts(r)];
+
+    actions.forEach(action => {
+      const nextState = postsByReddit(state, action);
+      expect(nextState).to.have.property('toronto');
+    });
   });
 });
 

@@ -32,7 +32,7 @@ export const posts = (state = {
     return Object.assign({}, state, {
       isFetching: false,
       didInvalidate: false,
-      updatedAt: action.receivedAt,
+      lastUpdated: action.receivedAt,
       items: action.posts,
     });
   default:
@@ -41,7 +41,16 @@ export const posts = (state = {
 };
 
 export const postsByReddit = (state = {}, action) => {
-  return state;
+  switch (action.type) {
+  case 'INVALIDATE_REDDIT':
+  case 'REQUEST_POSTS':
+  case 'RECEIVE_POSTS':
+    return Object.assign({}, state, {
+      [action.reddit]: posts(state, action),
+    });
+  default:
+    return state;
+  }
 };
 
 export const rootReducer = combineReducers({

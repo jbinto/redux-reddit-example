@@ -39,7 +39,7 @@ export function receivePosts(reddit, json) {
   return {
     type: RECEIVE_POSTS,
     reddit,  // reddit: reddit
-    posts: null,  // XXX
+    posts: [],  // XXX
     receivedAt: Date.now(),
   };
 }
