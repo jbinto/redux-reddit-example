@@ -10,7 +10,7 @@ module.exports = {
     'webpack-dev-server/client?http://localhost:8080',  // "client-side library of the Webpack dev server"
     'webpack/hot/only-dev-server', // "Webpack hot module loader"
 
-    './src/index.jsx',
+    './src/index.js',
   ],
 
   module: {

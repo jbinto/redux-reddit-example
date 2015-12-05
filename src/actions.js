@@ -87,3 +87,22 @@ export function shouldFetchPosts(state, reddit) {
 
   return posts.didInvalidate;
 }
+
+export function fetchPostsIfNeeded(reddit) {
+  // XXX no idea how to test this
+  // XXX so many things to mock: shouldFetchPosts, getState, dispatch.
+  // XXX not even sure what to expect for in the Promise.resolve case?
+
+  // Thunks also can optionally receive getState, e.g.
+  // to determine whether to dispatch (think caching).
+  return (dispatch, getState) => {
+    if (shouldFetchPosts(getState(), reddit)) {
+      // Dispatch a thunk from a thunk
+      return dispatch(fetchPosts(reddit));
+    }
+
+    // Let calling code know there's nothing to wait for.
+    // XXX WTF XXX
+    return Promise.resolve();
+  };
+}
