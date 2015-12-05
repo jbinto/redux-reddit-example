@@ -26,7 +26,7 @@ class AsyncApp extends Component {
   // looks like this fires just before componentDidMount.
   // Not sure why we do this in both places?
   // Can't we just do it on mount? (Or just here?)
-  componentDidReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.selectedReddit !== this.props.selectedReddit) {
       const { dispatch, selectedReddit } = nextProps;
       dispatch(fetchPostsIfNeeded(selectedReddit));
