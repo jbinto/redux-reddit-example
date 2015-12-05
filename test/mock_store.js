@@ -26,17 +26,7 @@ const mockStore = (getState, expectedActions, done) => {
       dispatch(action) {
         const expectedAction = expectedActions.shift();
 
-        // HACK XXX
-        // The RECEIVE_POSTS has a hardcoded Date.now() call. Ugh.
-        // This breaks equality compare since we can't predict Now.
-        // Maybe use `mockdate` package?
-        // HACK XXX
-        if (action.receivedAt) {
-          delete action.receivedAt;
-        }
-
         try {
-          console.log(`action: ${JSON.stringify(action)} expectedAction: ${JSON.stringify(expectedAction)}`);
           expect(action).to.deep.equal(expectedAction);
           if (done && expectedActions.length === 0) {
             // call the callback, signal end

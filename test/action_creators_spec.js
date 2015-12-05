@@ -3,6 +3,7 @@
 
 import nock from 'nock';
 import mockStore from './mock_store';
+import mockDate from 'mockdate';
 import { REQUEST_POSTS, RECEIVE_POSTS, fetchPosts } from '../src/actions';
 
 
@@ -26,6 +27,7 @@ const mockRedditData = {
 describe('async actions', () => {
   afterEach(() => {
     nock.cleanAll();
+    mockDate.reset();
   });
 
   // async tests will callback done() to signal test is over
@@ -37,6 +39,8 @@ describe('async actions', () => {
       .get('/r/reactjs.json')
       .reply(200, mockRedditData);
 
+    mockDate.set('1/1/1980');
+
     const expectedActions = [
       {
         type: REQUEST_POSTS,
@@ -45,6 +49,7 @@ describe('async actions', () => {
       {
         type: RECEIVE_POSTS,
         reddit: 'reactjs',
+        receivedAt: Date.now(), // woohoo mockDate!
         posts: [
           {
             title: 'Testing utility from Airbnb',
