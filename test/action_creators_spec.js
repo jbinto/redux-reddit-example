@@ -1,11 +1,49 @@
 /* globals describe, afterEach, it */
-// import { describe, afterEach, it } from 'chai';
+import { expect } from 'chai';
 
 import nock from 'nock';
 import mockStore from './mock_store';
 import mockDate from 'mockdate';
-import { REQUEST_POSTS, RECEIVE_POSTS, fetchPosts } from '../src/actions';
+import { REQUEST_POSTS, RECEIVE_POSTS, fetchPosts, shouldFetchPosts } from '../src/actions';
 
+describe('synchronous actions', () => {
+  it('shouldFetchPosts returns true when reddit not already in postsByReddit', () => {
+    const state = {
+      postsByReddit: {
+        toronto: {
+          items: [],
+        },
+      },
+    };
+
+    expect(shouldFetchPosts(state, 'reactjs')).to.be.true();
+  });
+
+  it('shouldFetchPosts returns false when isFetching is true', () => {
+    const state = {
+      postsByReddit: {
+        toronto: {
+          isFetching: true,
+        },
+      },
+    };
+
+    expect(shouldFetchPosts(state, 'toronto')).to.be.false();
+  });
+
+  it('shouldFetchPosts returns true when reddit exists, not fetching, and didInvalidate', () => {
+    const state = {
+      postsByReddit: {
+        toronto: {
+          isFetching: false,
+          didInvalidate: true,
+        },
+      },
+    };
+
+    expect(shouldFetchPosts(state, 'toronto')).to.be.true();
+  });
+});
 
 const mockRedditData = {
   children: [

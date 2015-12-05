@@ -74,3 +74,16 @@ export function fetchPosts(reddit) {
     );
   };
 }
+
+export function shouldFetchPosts(state, reddit) {
+  const posts = state.postsByReddit[reddit];
+
+  if (!posts) {
+    return true;
+  }
+  if (posts.isFetching) {
+    return false;
+  }
+  
+  return posts.didInvalidate;
+}
