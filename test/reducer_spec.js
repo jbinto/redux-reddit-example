@@ -94,21 +94,42 @@ describe('posts reducer', () => {
 });
 
 describe('postsByReddit reducer', () => {
-  const defaultState = () => postsByReddit(undefined, NOOP);
+  const originalState = {
+    pics: {
+      isFetching: false,
+      didInvalidate: false,
+      items: [],
+      lastUpdated: 1449341309741,
+    },
+  };
+
+
+  // console.log(`defaultState: ${JSON.stringify(defaultState())}`);
 
   it('exists', () => {
-    expect(defaultState()).to.be.ok();  // `ok` means truthy
+    expect(postsByReddit(undefined, NOOP)).to.be.ok();  // `ok` means truthy
   });
 
-  it('returns structured list of reddits by delegating to post reducer', () => {
-    const state = defaultState();
+  it('returns structured object of reddits by delegating to post reducer', () => {
+    // const state = defaultState();
+
+    // (Look at doc/state_shape.js)
+    // This reducer has to handle 3 out of the 4 actions, everything except
+    // SELECT_REDDIT. The reducer is the same name as a root-level state key,
+    // `postsByReddit`. All this reducer actually does is add the reddit name
+    // as the key, and gets the values by delegating to the `post` reducer.
 
     const r = 'toronto';
     const actions = [invalidateReddit(r), requestPosts(r), receivePosts(r)];
 
     actions.forEach(action => {
-      const nextState = postsByReddit(state, action);
+      const nextState = postsByReddit(originalState, action);
+
       expect(nextState).to.have.property('toronto');
+      expect(nextState).to.have.deep.property('toronto.items');
+
+      expect(nextState).to.have.property('pics');
+      expect(nextState).to.have.deep.property('pics.items');
     });
   });
 });

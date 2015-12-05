@@ -26,6 +26,8 @@ export const posts = (state = {
       isFetching: true,
       // why even track invalidation?
       // Guess: enable/disable refresh button?
+      // (XXX: middleware will check didInvalidate and fire request)
+      // (XXX: no UI component to didInvalidate; rather isFetching)
       didInvalidate: false,
     });
   case 'RECEIVE_POSTS':
@@ -46,7 +48,10 @@ export const postsByReddit = (state = {}, action) => {
   case 'REQUEST_POSTS':
   case 'RECEIVE_POSTS':
     return Object.assign({}, state, {
-      [action.reddit]: posts(state, action),
+      // Lots of cleverness going on here.
+      // If `state[action.reddit]` is undefined, `posts` reducer can handle it.
+      // Remember to pass only the relevant state subtree!
+      [action.reddit]: posts(state[action.reddit], action),
     });
   default:
     return state;
@@ -55,4 +60,7 @@ export const postsByReddit = (state = {}, action) => {
 
 export const rootReducer = combineReducers({
   selectedReddit,
+  postsByReddit,
 });
+
+export default rootReducer;
