@@ -41,7 +41,7 @@ export function receivePosts(reddit, json) {
     type: RECEIVE_POSTS,
     reddit,  // reddit: reddit
     // XXX: json should really never be null....
-    posts: json ? json.children.map(c => c.data) : [],
+    posts: json ? json.data.children.map(c => c.data) : [],
     // XXX: this hardcoded date makes testing extremely problematic
     receivedAt: Date.now(),
   };
@@ -84,6 +84,6 @@ export function shouldFetchPosts(state, reddit) {
   if (posts.isFetching) {
     return false;
   }
-  
+
   return posts.didInvalidate;
 }

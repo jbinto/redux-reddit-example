@@ -46,20 +46,22 @@ describe('synchronous actions', () => {
 });
 
 const mockRedditData = {
-  children: [
-    {
-      data: {
-        title: 'Testing utility from Airbnb',
-        url: 'http://airbnb.io/reagent/',
+  data: {
+    children: [
+      {
+        data: {
+          title: 'Testing utility from Airbnb',
+          url: 'http://airbnb.io/reagent/',
+        },
       },
-    },
-    {
-      data: {
-        title: 'Real time data flow with Redux and Socket.io',
-        url: 'http://spraso.com/real-time-data-flow-with-redux-and-socket-io/',
+      {
+        data: {
+          title: 'Real time data flow with Redux and Socket.io',
+          url: 'http://spraso.com/real-time-data-flow-with-redux-and-socket-io/',
+        },
       },
-    },
-  ],
+    ],
+  },
 };
 
 describe('async actions', () => {
@@ -70,7 +72,7 @@ describe('async actions', () => {
 
   // async tests will callback done() to signal test is over
   // read: https://mochajs.org/#asynchronous-code
-  it('dispatches RECEIVE_POSTS when fetching reddits has been done', (done) => {
+  it('fetchPosts() dispatches REQUEST_POSTS, then RECEIVE_POSTS', (done) => {
     // nock intercepts HTTP calls without (explicit) monkeypatching or
     // dependency injection
     nock('http://www.reddit.com/')
