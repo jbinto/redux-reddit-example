@@ -6,7 +6,7 @@ import {
   invalidateReddit,
 } from '../actions';
 import Picker from '../components/Picker';
-// import Posts from '../components/Posts';
+import Posts from '../components/Posts';
 
 class AsyncApp extends Component {
   constructor(props) {
@@ -68,9 +68,10 @@ class AsyncApp extends Component {
         <p>
           {lastUpdated &&
             <span>
-              Last updated at {new Date(lastUpdated).toLocaleTimeString()}}.
+              Last updated at {new Date(lastUpdated).toLocaleTimeString()}.
             </span>
           }
+          {' '}
           {!isFetching &&
             <a href="#"
                onClick={this.handleRefreshClick}>
@@ -85,7 +86,7 @@ class AsyncApp extends Component {
           // Double curly? No: a JSON {} inside a JSX {}
           // Also note React CSS uses CSS-DOM attributes
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            <p>TODO: insert POSTS component here</p>
+            <Posts posts={posts} />
           </div>
         }
       </div>
